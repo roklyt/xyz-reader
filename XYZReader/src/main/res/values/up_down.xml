@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- geometry -->
+    <integer name="viewport_width">24</integer>
+    <integer name="viewport_height">24</integer>
+    <integer name="viewport_center_x">12</integer>
+    <integer name="viewport_center_y">12</integer>
+    <string name="path_up">M6.4,14.8 L12.0,9.2 M12.0,9.2 L17.6,14.8</string>
+    <string name="path_down">M6.4,9.2 L12.0,14.8 M12.0,14.8 L17.6,9.2</string>
+    <integer name="stroke_width">2</integer>
+
+    <!-- names -->
+    <string name="up">up</string>
+    <string name="down">down</string>
+    <string name="groupUpDown">groupUpDown</string>
+
+    <!-- drawing -->
+    <color name="stroke_color">#999</color>
+
+    <!-- timing -->
+    <integer name="duration">450</integer>
+
+</resources>
