@@ -1,7 +1,5 @@
 package com.example.xyzreader.ui;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
@@ -11,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.ColorDrawable;
 
@@ -22,9 +19,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.transition.Scene;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,20 +32,13 @@ import android.transition.Slide;
 import android.transition.TransitionManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -90,6 +79,8 @@ public class ArticleDetailFragment extends Fragment implements
     private AnimatedVectorDrawable upToDown;
     private boolean up = true;
     private static boolean showBackUp = false;
+    private static final long longSlideDuration = 800;
+    private static final long slideDuration = 450;
 
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
@@ -152,8 +143,7 @@ public class ArticleDetailFragment extends Fragment implements
         final TextView titleText = mRootView.findViewById(R.id.article_title);
         final TextView byLineTextView = mRootView.findViewById(R.id.article_byline);
 
-        mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
-                mRootView.findViewById(R.id.draw_insets_frame_layout);
+        mDrawInsetsFrameLayout = mRootView.findViewById(R.id.draw_insets_frame_layout);
         mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
             @Override
             public void onInsetsChanged(Rect insets) {
@@ -174,11 +164,11 @@ public class ArticleDetailFragment extends Fragment implements
 
         RecyclerView = mRootView.findViewById(R.id.rv_body_text);
         final ImageButton  backToTopImagebutton= mRootView.findViewById(R.id.back_up);
-        backToTopImagebutton.animate().setDuration(1000);
+        backToTopImagebutton.animate().setDuration(longSlideDuration);
 
         RecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(-1)) {
@@ -202,7 +192,6 @@ public class ArticleDetailFragment extends Fragment implements
                 RecyclerView.smoothScrollToPosition(0);
             }
         });
-
 
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
         mStatusBarColorDrawable = new ColorDrawable(0);
@@ -237,18 +226,18 @@ public class ArticleDetailFragment extends Fragment implements
                     drawable.start();
 
                     Slide slide = new Slide();
-                    slide.setDuration(800);
+                    slide.setDuration(longSlideDuration);
                     slide.setSlideEdge(Gravity.TOP);
 
-                    ViewGroup root = (ViewGroup) mRootView.findViewById(R.id.scene_root);
+                    ViewGroup root = mRootView.findViewById(R.id.scene_root);
                     TransitionManager.beginDelayedTransition(root, slide);
                     mPhotoView.setVisibility(View.INVISIBLE);
 
                     byLineTextView.setVisibility(View.INVISIBLE);
                     titleText.setVisibility(View.INVISIBLE);
 
-                    mMetaBar.animate().translationY(-sd).setDuration(450);
-                    RecyclerView.animate().translationY(-sd).setDuration(450);
+                    mMetaBar.animate().translationY(-sd).setDuration(slideDuration);
+                    RecyclerView.animate().translationY(-sd).setDuration(slideDuration);
 
                     byLineTextView.setVisibility(View.GONE);
                     titleText.setVisibility(View.GONE);
@@ -260,15 +249,14 @@ public class ArticleDetailFragment extends Fragment implements
                     drawable.start();
 
                     Slide slide = new Slide();
-                    slide.setDuration(800);
+                    slide.setDuration(longSlideDuration);
                     slide.setSlideEdge(Gravity.TOP);
 
-                    ViewGroup root = (ViewGroup) mRootView.findViewById(R.id.scene_root);
+                    ViewGroup root = mRootView.findViewById(R.id.scene_root);
                     TransitionManager.beginDelayedTransition(root, slide);
                     mPhotoView.setVisibility(View.VISIBLE);
-                    sd =   mPhotoView.getHeight();
-                    mMetaBar.animate().translationY(0).setDuration(450);
-                    RecyclerView.animate().translationY(0).setDuration(450);
+                    mMetaBar.animate().translationY(0).setDuration(slideDuration);
+                    RecyclerView.animate().translationY(0).setDuration(slideDuration);
 
                     byLineTextView.setVisibility(View.VISIBLE);
                     titleText.setVisibility(View.VISIBLE);
@@ -365,8 +353,8 @@ public class ArticleDetailFragment extends Fragment implements
             }
 
             Iterable<String> chunks = Splitter.fixedLength(200).split(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
-            RecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            Adapter textAdapter = new Adapter(getActivityCast(), chunks);
+            RecyclerView.setLayoutManager(new LinearLayoutManager(mRootView.getContext()));
+            Adapter textAdapter = new Adapter(chunks);
             RecyclerView.setAdapter(textAdapter);
 
             //bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
@@ -443,27 +431,25 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     private class Adapter extends RecyclerView.Adapter<ArticleDetailFragment.ViewHolder> {
-        private Activity host;
         private List<String> Text;
 
-        public Adapter(Activity activity, Iterable<String> text) {
-            host = activity;
+        Adapter(Iterable<String> text) {
             Text = Lists.newArrayList(text);
         }
 
+        @NonNull
         @Override
-        public ArticleDetailFragment.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.detail_item_body, parent, false);
-            final ArticleDetailFragment.ViewHolder vh = new ArticleDetailFragment.ViewHolder(view);
+        public ArticleDetailFragment.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View view = inflater.inflate(R.layout.detail_item_body, parent, false);
 
-            return vh;
+            return new ArticleDetailFragment.ViewHolder(view);
         }
 
 
         @Override
-        public void onBindViewHolder(final ArticleDetailFragment.ViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull final ArticleDetailFragment.ViewHolder holder, final int position) {
             holder.bodyTextView.setText(Text.get(position));
-            Log.e("RecyclerView", "position: " + position);
         }
 
         @Override
@@ -473,12 +459,10 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
 
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView bodyTextView;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView bodyTextView;
-
-
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             bodyTextView = view.findViewById(R.id.body_text);
         }

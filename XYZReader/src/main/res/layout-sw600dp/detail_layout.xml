@@ -87,6 +87,7 @@
                 android:scrollbarAlwaysDrawVerticalTrack="true"
                 android:background="#6d000000"
                 android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 android:layout_marginLeft="125dp"
                 android:layout_marginRight="125dp"></android.support.v7.widget.RecyclerView>
 

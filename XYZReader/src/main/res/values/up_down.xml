@@ -21,4 +21,5 @@
     <!-- timing -->
     <integer name="duration">450</integer>
 
+    <integer name="long_duration">800</integer>
 </resources>
