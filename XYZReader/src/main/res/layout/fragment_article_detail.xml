@@ -19,31 +19,30 @@
         </FrameLayout>
     </com.example.xyzreader.ui.ObservableScrollView>
 
-    <ImageButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/back_up"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:alpha="0"
+        android:clickable="true"
+        android:focusable="true"
         android:elevation="@dimen/fab_elevation"
         android:layout_gravity="bottom|start"
-        android:alpha="0"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:scaleType="centerCrop"
-        android:background="#00000000"
-        android:src="@drawable/icon_to_top"
-        android:tint="@color/theme_accent" />
+        android:tint="@color/text_color_primary"
+        app:srcCompat="@drawable/icon_to_top" />
 
-
-    <ImageButton android:id="@+id/share_fab"
-        android:stateListAnimator="@anim/fab_state_list_anim"
-        android:background="@drawable/add_fab_background"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="@dimen/fab_margin"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
-        android:src="@drawable/ic_share"
+        android:clickable="true"
+        android:focusable="true"
         android:elevation="@dimen/fab_elevation"
-        android:contentDescription="@string/action_share" />
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/ic_share" />
 
 </com.example.xyzreader.ui.DrawInsetsFrameLayout>
